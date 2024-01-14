@@ -5,6 +5,8 @@ import math
 import random
 import numpy as np
 
+import pdb
+
 from pytorch_metric_learning import miners, losses
 from pytorch_metric_learning.utils import loss_and_miner_utils as lmu
 import torch.distributed as dist
@@ -13,10 +15,13 @@ import hyptorch.pmath as pmath
 import hyptorch.nn as hypnn
 from hyptorch.pmath import dist_matrix
 
+
+
     
 class HIERLoss(nn.Module):
     def __init__(self, nb_proxies, sz_embed, mrg=0.1, tau=0.1, hyp_c=0.1, clip_r=2.3):
         super().__init__()
+        pdb.set_trace()
         self.nb_proxies = nb_proxies
         self.sz_embed = sz_embed
         self.tau = tau
@@ -25,7 +30,7 @@ class HIERLoss(nn.Module):
         self.clip_r = clip_r
         
         self.lcas = torch.randn(self.nb_proxies, self.sz_embed).cuda()
-        self.lcas = self.lcas / math.sqrt(self.sz_embed) * clip_r * 0.9
+        self.lcas = self.lcas / math.sqrt(self.sz_embed) * clip_r * 0.9 #??
         self.lcas = torch.nn.Parameter(self.lcas)
         self.to_hyperbolic = hypnn.ToPoincare(c=hyp_c, ball_dim=sz_embed, riemannian=True, clip_r=clip_r, train_c=False)
                 
@@ -226,8 +231,8 @@ class PALoss_Angle(torch.nn.Module):
             P = P[:self.nb_classes]
                 
         cos = F.linear(F.normalize(X), F.normalize(P))  # Calcluate cosine similarity
-        P_one_hot = F.one_hot(T, num_classes = self.nb_classes).float()        
-        N_one_hot = 1 - P_one_hot
+        P_one_hot = F.one_hot(T, num_classes = self.nb_classes).float()  #positive one hot       
+        N_one_hot = 1 - P_one_hot  # neg one hot
     
         pos_exp = torch.exp(-self.alpha * (cos - self.mrg))
         neg_exp = torch.exp(self.alpha * (cos + self.mrg))

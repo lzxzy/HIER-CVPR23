@@ -1,6 +1,6 @@
-CUDA_VISIBLE_DEVICES=0,1 python -m torch.distributed.launch \
+CUDA_VISIBLE_DEVICES=0 python -m torch.distributed.launch \
     --master_port=${MASTER_PORT:-$RANDOM} \
-    --nproc_per_node=2 hier/train.py \
+    --nproc_per_node=1 hier/train.py \
     --lr 1e-4 --epochs 100 --batch_size 90 \
     --num_hproxies 512 --clip_r 2.3 \
     --hyp_c 0.1 --warmup_epochs 1 \

@@ -17,6 +17,8 @@ import torch.nn.functional as F
 import torchvision.transforms as T
 from torch.utils.data import DataLoader
 
+import pdb
+
 from pathlib import Path
 from functools import partial
 import PIL
@@ -107,9 +109,9 @@ def get_args_parser():
     # Misc
     parser.add_argument('--dataset', default='CUB', type=str, 
                         choices=["SOP", "CUB", "Cars", "Inshop"], help='Please specify dataset to train')
-    parser.add_argument('--data_path', default='/path/to/dataset', type=str,
+    parser.add_argument('--data_path', default='/root/autodl-tmp/dataset', type=str,
         help='Please specify path to the ImageNet training data.')
-    parser.add_argument('--output_dir', default="./logs/", type=str, help='Path to save logs and checkpoints.')
+    parser.add_argument('--output_dir', default="/root/autodl-tmp/hier/logs/", type=str, help='Path to save logs and checkpoints.')
     parser.add_argument('--run_name', default="", type=str, help='Wandb run name')
     parser.add_argument('--saveckp_freq', default=40, type=int, help='Save checkpoint every x epochs.')
     parser.add_argument('--eval_freq', default=1, type=int, help='Evaluation for every x epochs.')
@@ -217,6 +219,7 @@ def train_one_epoch(model, cluster_loss, sup_metric_loss, get_emb_s, data_loader
 
 
 if __name__ == "__main__":
+    pdb.set_trace()
     parser = argparse.ArgumentParser('HIER', parents=[get_args_parser()])
     args = parser.parse_args()
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
@@ -241,7 +244,7 @@ if __name__ == "__main__":
     ds_class = ds_list[args.dataset]
     ds_train = ds_class(args.data_path, "train", train_tr)
     nb_classes = len(list(set(ds_train.ys)))
-    if args.IPC > 0:
+    if args.IPC > 0: # instance per class
         sampler = UniqueClassSampler(ds_train.ys, args.batch_size, args.IPC, args.local_rank, world_size)
     else:
         sampler = torch.utils.data.DistributedSampler(ds_train, shuffle=True)
