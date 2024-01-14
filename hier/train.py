@@ -219,7 +219,7 @@ def train_one_epoch(model, cluster_loss, sup_metric_loss, get_emb_s, data_loader
 
 
 if __name__ == "__main__":
-    pdb.set_trace()
+    # pdb.set_trace()
     parser = argparse.ArgumentParser('HIER', parents=[get_args_parser()])
     args = parser.parse_args()
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)

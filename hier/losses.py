@@ -21,7 +21,7 @@ from hyptorch.pmath import dist_matrix
 class HIERLoss(nn.Module):
     def __init__(self, nb_proxies, sz_embed, mrg=0.1, tau=0.1, hyp_c=0.1, clip_r=2.3):
         super().__init__()
-        pdb.set_trace()
+        # pdb.set_trace()
         self.nb_proxies = nb_proxies
         self.sz_embed = sz_embed
         self.tau = tau
@@ -67,6 +67,7 @@ class HIERLoss(nn.Module):
         return loss
         
     def get_reciprocal_triplets(self, sim_matrix, topk=20, t_per_anchor = 100):
+        # pdb.set_trace()
         anchor_idx, positive_idx, negative_idx = [], [], []
         
         topk_index = torch.topk(sim_matrix, topk)[1]
@@ -96,7 +97,7 @@ class HIERLoss(nn.Module):
         all_nodes = torch.cat([z_s, lcas])
         all_dist_matrix = self.dist_f(all_nodes, all_nodes)
           
-        sim_matrix = torch.exp(-all_dist_matrix[:bs,:bs]).detach()
+        sim_matrix = torch.exp(-all_dist_matrix[:bs,:bs]).detach() # pie(p) =  exp(-max({d}))
         one_hot_mat = (y.unsqueeze(1) == y.unsqueeze(0))
         sim_matrix[one_hot_mat] += 1
         sim_matrix2 = torch.exp(-all_dist_matrix[bs:,bs:]).detach()

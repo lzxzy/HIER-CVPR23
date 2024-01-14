@@ -730,7 +730,7 @@ def get_params_groups(model, sup_loss=None, cluster_loss=None, lr=1e-5, fc_lr_sc
     last_layer = []
     proxies = []
     lcas = []
-    pdb.set_trace()
+    # pdb.set_trace()
     num_param = 0
     for name, param in model.named_parameters():
         if not param.requires_grad:
